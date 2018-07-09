@@ -23,9 +23,12 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
 COPY settings-docker.xml /usr/share/maven/ref/
 
-RUN useradd -ms /bin/bash jike
-USER jike
-WORKDIR /home/jike
+ARG UNAME=jenkins
+ARG UID=498
+ARG GID=497
+RUN groupadd -g $GID $UNAME
+RUN useradd -m -u $UID -g $GID -s /bin/bash $UNAME
+USER $UNAME
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["mvn"]
