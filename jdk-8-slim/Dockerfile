@@ -1,7 +1,7 @@
 FROM openjdk:8-jdk-slim
 
 ARG MAVEN_VERSION=3.5.4
-ARG USER_HOME_DIR="/root"
+ARG USER_HOME_DIR="/home/jike"
 ARG SHA=ce50b1c91364cb77efe3776f756a6d92b76d9038b0a0782f7d53acf1e997a14d
 ARG BASE_URL=https://apache.osuosl.org/maven/maven-3/${MAVEN_VERSION}/binaries
 
@@ -22,6 +22,10 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
 COPY settings-docker.xml /usr/share/maven/ref/
+
+RUN useradd -ms /bin/bash jike
+USER jike
+WORKDIR /home/jike
 
 ENTRYPOINT ["/usr/local/bin/mvn-entrypoint.sh"]
 CMD ["mvn"]
